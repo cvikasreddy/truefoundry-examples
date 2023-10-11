@@ -4,14 +4,21 @@ from pydantic import BaseModel
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from uvicorn.workers import UvicornWorker
 
-model_name_or_path = "TheBloke/Llama-2-70B-chat-GPTQ"
-model = AutoModelForCausalLM.from_pretrained(
-    model_name_or_path, device_map="auto", trust_remote_code=False, revision="main"
+from transformers import GPTNeoXForCausalLM, AutoTokenizer
+
+model = GPTNeoXForCausalLM.from_pretrained(
+  "EleutherAI/pythia-70m-deduped",
+  revision="step3000",
+  cache_dir="./pythia-70m-deduped/step3000",
 )
-tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, use_fast=True)
+
+tokenizer = AutoTokenizer.from_pretrained(
+  "EleutherAI/pythia-70m-deduped",
+  revision="step3000",
+  cache_dir="./pythia-70m-deduped/step3000",
+)
 
 app = FastAPI()
-
 
 class ParameterInput(BaseModel):
     max_new_tokens: int = 50
